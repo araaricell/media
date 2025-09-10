@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - RizqinaMedia</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --sidebar-width: 250px;
+            --header-height: 70px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--dark);
+            color: white;
+            position: fixed;
+            height: 100vh;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-brand h2 {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .sidebar-menu {
+            margin-top: 1rem;
+        }
+
+        .sidebar-menu ul {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            padding: 0.8rem 1.5rem;
+            margin: 0.2rem 0;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu li:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--primary);
+        }
+
+        .sidebar-menu li.active {
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--primary);
+        }
+
+        .sidebar-menu a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar-menu i {
+            margin-right: 0.8rem;
+            font-size: 1.2rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            width: calc(100% - var(--sidebar-width));
+            margin-left: var(--sidebar-width);
+        }
+
+        /* Header */
+        header {
+            background: white;
+            height: var(--header-height);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .search-wrapper {
+            display: flex;
+            align-items: center;
+            background: var(--light);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            width: 300px;
+        }
+
+        .search-wrapper input {
+            border: none;
+            background: transparent;
+            margin-left: 0.5rem;
+            width: 100%;
+            outline: none;
+        }
+
+        .user-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-wrapper img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 1rem;
+        }
+
+        .user-wrapper h4 {
+            margin-bottom: 0.2rem;
+        }
+
+        .user-wrapper small {
+            color: var(--gray);
+        }
+
+        /* Main Dashboard */
+        .dashboard {
+            padding: 2rem;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-icon {
+            background: var(--primary);
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .card-info h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-info p {
+            color: var(--gray);
+        }
+
+        .card:nth-child(1) .card-icon {
+            background: linear-gradient(45deg, #4361ee, #3a0ca3);
+        }
+
+        .card:nth-child(2) .card-icon {
+            background: linear-gradient(45deg, #f72585, #b5179e);
+        }
+
+        .card:nth-child(3) .card-icon {
+            background: linear-gradient(45deg, #4cc9f0, #4895ef);
+        }
+
+        .card:nth-child(4) .card-icon {
+            background: linear-gradient(45deg, #f77f00, #d62828);
+        }
+
+        /* Product Management */
+        .product-management {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header h3 {
+            font-size: 1.2rem;
+        }
+
+        .section-header button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .section-header button:hover {
+            background: var(--secondary);
+        }
+
+        /* Product Form */
+        .product-form {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .form-actions button {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--gray);
+            color: white;
+        }
+
+        /* Products Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            text-align: left;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--light-gray);
+            color: var(--gray);
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        tbody td {
+            padding: 1rem 0;
+            vertical-align: top;
+        }
+
+        .product-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .product-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 1rem;
+        }
+
+        .product-details h4 {
+            margin-bottom: 0.3rem;
+        }
+
+        .product-details p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .status.active {
+            background: rgba(76, 201, 240, 0.2);
+            color: #4cc9f0;
+        }
+
+        .status.inactive {
+            background: rgba(247, 127, 0, 0.2);
+            color: #f77f00;
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .actions button {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .btn-edit {
+            background: #4cc9f0;
+        }
+
+        .btn-delete {
+            background: #f77f00;
+        }
+
+        /* Back to Store Button */
+        .back-to-store {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .back-to-store:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.4);
+        }
+
+        .back-to-store i {
+            margin-right: 0.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            
+            .sidebar-brand h2, .sidebar-menu span {
+                display: none;
+            }
+            
+            .sidebar-menu i {
+                margin-right: 0;
+                font-size: 1.5rem;
+            }
+            
+            .sidebar-menu li {
+                text-align: center;
+                padding: 1rem 0.5rem;
+            }
+            
+            .main-content {
+                width: calc(100% - 70px);
+                margin-left: 70px;
+            }
+            
+            .cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-wrapper {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <h2>RizqinaMedia</h2>
+        </div>
+        
+        <div class="sidebar-menu">
+            <ul>
+                <li class="active">
+                    <a href="#">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="showProductSection()">
+                        <i class="fas fa-box"></i>
+                        <span>Produk</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Pesanan</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Analytics</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fas fa-cog"></i>
+                        <span>Pengaturan</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header>
+            <div class="search-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search..." id="searchInput">
+            </div>
+            
+            <div class="user-wrapper">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Admin">
+                <div>
+                    <h4>Admin Rizqina</h4>
+                    <small>Super Admin</small>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Dashboard Content -->
+        <div class="dashboard">
+            <h2>Dashboard</h2>
+            <p>Selamat datang di panel admin RizqinaMedia</p>
+            
+            <!-- Cards -->
+            <div class="cards">
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3 id="totalSales">0</h3>
+                        <p>Total Penjualan</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3 id="totalCustomers">0</h3>
+                        <p>Pelanggan</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3 id="totalProducts">0</h3>
+                        <p>Produk</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3 id="totalRevenue">Rp 0</h3>
+                        <p>Pendapatan</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product Management -->
+            <div class="product-management">
+                <div class="section-header">
+                    <h3>Manajemen Produk</h3>
+                    <button onclick="toggleProductForm()">+ Tambah Produk</button>
+                </div>
+                
+                <!-- Product Form -->
+                <div class="product-form" id="productForm">
+                    <h4 id="formTitle">Tambah Produk Baru</h4>
+                    <form id="productFormElement">
+                        <input type="hidden" id="productId">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="productName">Nama Produk</label>
+                                <input type="text" id="productName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="productPrice">Harga (Rp)</label>
+                                <input type="number" id="productPrice" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="productDescription">Deskripsi Produk</label>
+                            <textarea id="productDescription" required></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="productCategory">Kategori</label>
+                                <select id="productCategory" required>
+                                    <option value="">Pilih Kategori</option>
+                                    <option value="E-Book">E-Book</option>
+                                    <option value="Template">Template</option>
+                                    <option value="Course">Course</option>
+                                    <option value="Software">Software</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="productStatus">Status</label>
+                                <select id="productStatus" required>
+                                    <option value="active">Aktif</option>
+                                    <option value="inactive">Nonaktif</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="productImage">URL Gambar Produk</label>
+                            <input type="text" id="productImage" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" onclick="cancelEdit()">Batal</button>
+                            <button type="submit" class="btn-primary">Simpan Produk</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Products Table -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Produk</th>
+                            <th>Kategori</th>
+                            <th>Harga</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTable">
+                        <!-- Products will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Store Button -->
+    <a href="index.html" class="back-to-store">
+        <i class="fas fa-store"></i> Kembali ke Toko
+    </a>
+
+    <script>
+        // Database menggunakan localStorage
+        const DB_NAME = 'rizqinamedia_db';
+        
+        // Inisialisasi database jika belum ada
+        function initializeDatabase() {
+            if (!localStorage.getItem(DB_NAME)) {
+                const initialData = {
+                    products: [
+                        {
+                            id: 1,
+                            name: "E-Book Panduan Bisnis Online",
+                            price: 99000,
+                            description: "Panduan lengkap membangun bisnis online dari nol hingga menghasilkan profit jutaan rupiah per bulan.",
+                            category: "E-Book",
+                            status: "active",
+                            image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                        },
+                        {
+                            id: 2,
+                            name: "Template Canva Premium",
+                            price: 149000,
+                            description: "Kumpulan template Canva profesional untuk Instagram, Facebook, YouTube, dan media sosial lainnya.",
+                            category: "Template",
+                            status: "active",
+                            image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                        }
+                    ],
+                    orders: [],
+                    customers: []
+                };
+                localStorage.setItem(DB_NAME, JSON.stringify(initialData));
+            }
+            return JSON.parse(localStorage.getItem(DB_NAME));
+        }
+        
+        // Simpan data ke database
+        function saveData(data) {
+            localStorage.setItem(DB_NAME, JSON.stringify(data));
+        }
+        
+        // Ambil semua produk
+        function getProducts() {
+            const db = initializeDatabase();
+            return db.products;
+        }
+        
+        // Tambah produk baru
+        function addProduct(product) {
+            const db = initializeDatabase();
+            product.id = Date.now(); // ID unik berdasarkan timestamp
+            db.products.push(product);
+            saveData(db);
+            return product;
+        }
+        
+        // Edit produk
+        function updateProduct(updatedProduct) {
+            const db = initializeDatabase();
+            const index = db.products.findIndex(p => p.id === updatedProduct.id);
+            if (index !== -1) {
+                db.products[index] = updatedProduct;
+                saveData(db);
+                return true;
+            }
+            return false;
+        }
+        
+        // Hapus produk
+        function deleteProduct(productId) {
+            const db = initializeDatabase();
+            db.products = db.products.filter(p => p.id !== productId);
+            saveData(db);
+        }
+        
+        // Tampilkan produk di tabel
+        function renderProducts() {
+            const products = getProducts();
+            const table = document.getElementById('productsTable');
+            table.innerHTML = '';
+            
+            products.forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="product-info">
+                            <img src="${product.image}" alt="${product.name}" class="product-image">
+                            <div class="product-details">
+                                <h4>${product.name}</h4>
+                                <p>${product.description.substring(0, 50)}...</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${product.category}</td>
+                    <td>Rp ${product.price.toLocaleString('id-ID')}</td>
+                    <td><span class="status ${product.status}">${product.status === 'active' ? 'Aktif' : 'Nonaktif'}</span></td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn-edit" onclick="editProduct(${product.id})"><i class="fas fa-edit"></i></button>
+                            <button class="btn-delete" onclick="deleteProductConfirm(${product.id})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </td>
+                `;
+                table.appendChild(row);
+            });
+            
+            // Update statistik
+            updateStats();
+        }
+        
+        // Update statistik dashboard
+        function updateStats() {
+            const db = initializeDatabase();
+            document.getElementById('totalProducts').textContent = db.products.length;
+            document.getElementById('totalSales').textContent = db.orders.length;
+            document.getElementById('totalCustomers').textContent = db.customers.length;
+            
+            // Hitung total pendapatan
+            const totalRevenue = db.orders.reduce((total, order) => total + order.total, 0);
+            document.getElementById('totalRevenue').textContent = `Rp ${totalRevenue.toLocaleString('id-ID')}`;
+        }
+        
+        // Toggle form produk
+        function toggleProductForm() {
+            const form = document.getElementById('productForm');
+            form.style.display = form.style.display === 'block' ? 'none' : 'block';
+        }
+        
+        // Edit produk
+        function editProduct(productId) {
+            const products = getProducts();
+            const product = products.find(p => p.id === productId);
+            
+            if (product) {
+                document.getElementById('formTitle').textContent = 'Edit Produk';
+                document.getElementById('productId').value = product.id;
+                document.getElementById('productName').value = product.name;
+                document.getElementById('productPrice').value = product.price;
+                document.getElementById('productDescription').value = product.description;
+                document.getElementById('productCategory').value = product.category;
+                document.getElementById('productStatus').value = product.status;
+                document.getElementById('productImage').value = product.image;
+                
+                document.getElementById('productForm').style.display = 'block';
+            }
+        }
+        
+        // Batalkan edit
+        function cancelEdit() {
+            document.getElementById('productFormElement').reset();
+            document.getElementById('productId').value = '';
+            document.getElementById('formTitle').textContent = 'Tambah Produk Baru';
+            document.getElementById('productForm').style.display = 'none';
+        }
+        
+        // Konfirmasi hapus produk
+        function deleteProductConfirm(productId) {
+            if (confirm('Apakah Anda yakin ingin menghapus produk ini?')) {
+                deleteProduct(productId);
+                renderProducts();
+            }
+        }
+        
+        // Event listener ketika DOM sudah dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inisialisasi database dan render produk
+            initializeDatabase();
+            renderProducts();
+            
+            // Handle form submission
+            document.getElementById('productFormElement').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const productId = document.getElementById('productId').value;
+                const product = {
+                    name: document.getElementById('productName').value,
+                    price: parseInt(document.getElementById('productPrice').value),
+                    description: document.getElementById('productDescription').value,
+                    category: document.getElementById('productCategory').value,
+                    status: document.getElementById('productStatus').value,
+                    image: document.getElementById('productImage').value
+                };
+                
+                if (productId) {
+                    product.id = parseInt(productId);
+                    updateProduct(product);
+                } else {
+                    addProduct(product);
+                }
+                
+                // Reset form dan refresh tabel
+                cancelEdit();
+                renderProducts();
+            });
+            
+            // Pencarian produk
+            document.getElementById('searchInput').addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const products = getProducts();
+                const filteredProducts = products.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm) || 
+                    product.description.toLowerCase().includes(searchTerm) ||
+                    product.category.toLowerCase().includes(searchTerm)
+                );
+                
+                const table = document.getElementById('productsTable');
+                table.innerHTML = '';
+                
+                filteredProducts.forEach(product => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            <div class="product-info">
+                                <img src="${product.image}" alt="${product.name}" class="product-image">
+                                <div class="product-details">
+                                    <h4>${product.name}</h4>
+                                    <p>${product.description.substring(0, 50)}...</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${product.category}</td>
+                        <td>Rp ${product.price.toLocaleString('id-ID')}</td>
+                        <td><span class="status ${product.status}">${product.status === 'active' ? 'Aktif' : 'Nonaktif'}</span></td>
+                        <td>
+                            <div class="actions">
+                                <button class="btn-edit" onclick="editProduct(${product.id})"><i class="fas fa-edit"></i></button>
+                                <button class="btn-delete" onclick="deleteProductConfirm(${product.id})"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </td>
+                    `;
+                    table.appendChild(row);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
